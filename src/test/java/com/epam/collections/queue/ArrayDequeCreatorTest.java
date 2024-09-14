@@ -13,17 +13,32 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ArrayDequeCreatorTest {
+
     public static Stream<Arguments> testCases() {
         return Stream.of(
+                // Пустые очереди
+                Arguments.of("EmptyQueues",
+                        new LinkedList<>(List.of()),
+                        new LinkedList<>(List.of()),
+                        List.of()),
+
+                // Очереди с двумя элементами
                 Arguments.of("QueuesWithTwoElements",
                         new LinkedList<>(List.of(1, 4)),
                         new LinkedList<>(List.of(5, 6)),
                         List.of(1, 4, 5, 6)),
 
+                // Очереди с шестью элементами
                 Arguments.of("QueuesWith6Elements",
                         new LinkedList<>(List.of(1, 3, 5, 4, 7, 9)),
                         new LinkedList<>(List.of(4, 2, 8, 5, 8, 3)),
-                        List.of(1, 3, 4, 5, 8, 7, 8, 2, 4, 3, 5, 9))
+                        List.of(1, 3, 4, 5, 8, 7, 8, 2, 4, 3, 5, 9)),
+
+                // Очереди с одинаковыми элементами
+                Arguments.of("QueuesWithSameElements",
+                        new LinkedList<>(List.of(1, 1, 1, 1)),
+                        new LinkedList<>(List.of(1, 1, 1, 1)),
+                        List.of(1, 1, 1, 1, 1, 1, 1, 1))
         );
     }
 
@@ -36,8 +51,16 @@ public class ArrayDequeCreatorTest {
 
         ArrayDequeCreator creator = new ArrayDequeCreator();
         ArrayDeque<Integer> actualArrayDeque = creator.createArrayDeque(firstQueue, secondQueue);
+        
+        // Проверяем размер ArrayDeque
         assertEquals(expectedArrayDequeValues.size(), actualArrayDeque.size());
+
+        // Проверяем, что элементы соответствуют ожидаемым значениям
         expectedArrayDequeValues.forEach(
                 expectedQueueValue -> assertEquals(expectedQueueValue, actualArrayDeque.poll()));
+        
+        // Дополнительно можно проверить, что исходные очереди теперь пусты (все карты перемещены)
+        assertEquals(0, firstQueue.size(), "First queue should be empty after the operation.");
+        assertEquals(0, secondQueue.size(), "Second queue should be empty after the operation.");
     }
 }
